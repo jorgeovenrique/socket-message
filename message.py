@@ -17,8 +17,6 @@
 
 user_command = ""
 while user_command != "exit":
-    print("itération")
-    
     try:
         login
     except NameError:
@@ -37,6 +35,7 @@ while user_command != "exit":
     # Impose un choix entre différentes propositions
     user_command = input(login + " Choisissez une proposition: ")
     action_number = user_command
+    # Vérifie que le choix entré par l'utilisateur est bien un nombre entier
     try:
         action_number = int(action_number)
     except ValueError:
@@ -50,11 +49,17 @@ while user_command != "exit":
         message = user_command
         user_command = input(login + " Tapez le titre de votre message: ")
         message_title = user_command
-        # Mémorise le message et son titre dans un dictionaire
-        message_dict = {message_title: message}
+        # Mémorise le login de l'utilisateur, son message et son titre dans un dictionaire
+        message_dict = {login: [message_title, message]}
+        message_dict = str(message_dict)
+        folder = open("liste_message.txt", "a")
+        folder.write("\n" + message_dict)
+        folder.close
         print(message_dict)
     elif action_number == 1:
         login = ""
         print("logout")
+    else:
+        print("proposition incorrect, essayez à nouveau:")
     
 # user_command = input(login + ": ")
