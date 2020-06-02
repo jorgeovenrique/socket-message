@@ -37,7 +37,12 @@ while user_command != "exit":
     # Impose un choix entre différentes propositions
     user_command = input(login + " Choisissez une proposition: ")
     action_number = user_command
-    action_number = int(action_number)
+    try:
+        action_number = int(action_number)
+    except ValueError:
+        print("proposition incorrect, essayez à nouveau:")
+        action_number = ""
+        continue
     
     # Effectue différentes opérations selon la proposition sélectionée
     if action_number == 0:
