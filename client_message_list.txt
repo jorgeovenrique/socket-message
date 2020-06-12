@@ -1,0 +1,10 @@
+
+{'author': 'jorge', 'message': 'qsdsdf', 'message_title': 'qsdsdf', 'recipient': 'qsdfsdf'}
+{'author': 'jorge', 'message': 'mon message', 'message_title': 'mon titre', 'recipient': 'mon destinataire'}
+{'author': 'jorge', 'message': 'mon message via le réseau', 'message_title': 'mon titre', 'recipient': 'mon serveur'}
+{'author': 'jorge', 'message': 'sdfqdf', 'message_title': 'qsdfqsdf', 'recipient': 'qsdfsdf'}
+{'author': 'jorge', 'message': 'qsdf', 'message_title': 'qsdfqs', 'recipient': 'qsdf'}
+{'author': 'jorge', 'message': 'dsqf', 'message_title': 'qsdf', 'recipient': 'sqdf'}
+{'author': 'jorge', 'message': 'qdsf', 'message_title': 'qsdf', 'recipient': 'qsdf'}
+{'author': 'jorge', 'message': 'qsdf', 'message_title': 'qsdfq', 'recipient': 'qsdf'}
+{'author': 'jorge', 'message': 'sqdf', 'message_title': 'qsdf', 'recipient': 'qsdf'}
