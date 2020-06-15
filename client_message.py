@@ -67,24 +67,31 @@ while user_command != "exit":
         folder = open("client_message_list.txt", "a")
         folder.write("\n" + message_dict)
         folder.close
-        # Envoie au serveur le dictionaire converti en octets
+        print(message_dict)
+
+        # Teste si le serveur est déconnecté
         if server_conn.fileno() == -1:
             print("Il n'y a pas de connexion, le message n'a donc pas pu être envoyé")
-
+            continue
+        # Envoie au serveur le dictionaire converti en octets
         server_conn.send(message_dict.encode("utf-8"))
-        print(message_dict)
 
     elif action_number == 1:
         login = ""
         print("logout")
 
     elif action_number == 2:
+        # Teste si le serveur est déconnecté
+        if server_conn.fileno() == -1:
+            print("Le serveur est déjà déconnecté")
+            continue
+
         server_conn.send("close".encode("utf-8"))
         server_conn.close()
         print("vous avez été déconnecté")
 
     elif action_number == 3:
-        # Teste si la connexion est effective
+        # Teste si le serveur est connecté
         if server_conn.fileno() != -1:
             print(server_conn)
             print("Le client est déjà connecté au serveur")
@@ -98,5 +105,14 @@ while user_command != "exit":
 
     else:
         print("proposition incorrect, essayez à nouveau:")
-    
-# user_command = input(login + ": ")
+
+if server_conn.fileno() == -1:   
+    # Reconnecte le client au serveur
+    server_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_conn.connect(('127.0.0.1', 12800))
+    message_recv = server_conn.recv(1024)
+    print(message_recv.decode())
+
+message = "stop"
+# Envoie au serveur la chaine de caractères converti en octets
+server_conn.send(message.encode("utf-8"))
