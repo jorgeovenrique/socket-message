@@ -15,7 +15,7 @@
 # message_dict = {message_title: message}
 # print(message_dict)
 
-import socket
+import socket, hashlib
 
 server_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_conn.connect(('127.0.0.1', 12800))
@@ -63,18 +63,27 @@ while user_command != "exit":
         # Mémorise l'auteur du message, son message, son titre et son destinataire dans un dictionaire
         message_dict = {"author": login, "message": message, "message_title": message_title, "recipient": recipient}
         message_dict = str(message_dict)
+
         # Enregistre le dictionaire dans un document texte
         folder = open("client_message_list.txt", "a")
         folder.write("\n" + message_dict)
         folder.close
-        print(message_dict)
+        print("message enregistré")
 
         # Teste si le serveur est déconnecté
         if server_conn.fileno() == -1:
             print("Il n'y a pas de connexion, le message n'a donc pas pu être envoyé")
             continue
         # Envoie au serveur le dictionaire converti en octets
-        server_conn.send(message_dict.encode("utf-8"))
+        message_dict = message_dict.encode("utf-8")
+        server_conn.send(message_dict)
+        print(message_dict.decode() + " =>> envoyé au serveur")
+
+        # Crée un objet haché de type SHAKE-256 à partir du dictionaire précédemment créé
+        hash_message_dict = hashlib.shake_256(message_dict)
+        # Envoie un objet de type bytes au serveur
+        server_conn.send(hash_message_dict.hexdigest(60).encode("utf-8"))
+        print(hash_message_dict.hexdigest(60) + " =>> envoyé au serveur")
 
     elif action_number == 1:
         login = ""
