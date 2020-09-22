@@ -15,7 +15,14 @@
 # message_dict = {message_title: message}
 # print(message_dict)
 
+# # Crée un objet haché de type SHAKE-256 à partir du dictionaire précédemment créé
+# hash_message_dict = hashlib.shake_256(message_dict)
+# # Envoie un objet de type bytes au serveur
+# server_conn.send(hash_message_dict.hexdigest(60).encode("utf-8"))
+# print(hash_message_dict.hexdigest(60)+" =>> envoyé au serveur")
+
 import socket, hashlib
+from cryptography.fernet import Fernet
 
 server_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_conn.connect(('127.0.0.1', 12800))
@@ -35,13 +42,14 @@ while user_command != "exit":
         login_list = ["jorge", "jean", "jacques"]
         user_command = input("login: ")
         login = user_command
+        # Réexecute le while si le login ne figure pas dans la liste "login_list"
         if (login in login_list) == False:
             print("login incorrect, essayez à nouveau: ")
             login = ""
             continue
 
     # Impose un choix entre différentes propositions
-    user_command = input(login + " Choisissez une proposition: ")
+    user_command = input(login+" Choisissez une proposition: ")
     action_number = user_command
     # Vérifie que le choix entré par l'utilisateur est bien un nombre entier
     try:
@@ -53,11 +61,11 @@ while user_command != "exit":
     
     # Effectue différentes opérations selon la proposition sélectionée
     if action_number == 0:
-        user_command = input(login + " Tapez votre message: ")
+        user_command = input(login+" Tapez votre message: ")
         message = user_command
-        user_command = input(login + " Tapez le titre de votre message: ")
+        user_command = input(login+" Tapez le titre de votre message: ")
         message_title = user_command
-        user_command = input(login + " Tapez le nom du destinataire: ")
+        user_command = input(login+" Tapez le nom du destinataire: ")
         recipient = user_command
 
         # Mémorise l'auteur du message, son message, son titre et son destinataire dans un dictionaire
@@ -66,7 +74,7 @@ while user_command != "exit":
 
         # Enregistre le dictionaire dans un document texte
         folder = open("client_message_list.txt", "a")
-        folder.write("\n" + message_dict)
+        folder.write("\n"+message_dict)
         folder.close
         print("message enregistré")
 
@@ -74,17 +82,32 @@ while user_command != "exit":
         if server_conn.fileno() == -1:
             print("Il n'y a pas de connexion, le message n'a donc pas pu être envoyé")
             continue
-        # Envoie au serveur le dictionaire converti en octets
+
+        # Converti le dictionnaire en octets
         message_dict = message_dict.encode("utf-8")
-        server_conn.send(message_dict)
-        print(message_dict.decode() + " =>> envoyé au serveur")
+        user_command = input(login+" Voulez-vous chiffrer le message avant de l'envoyer ?(Oui, Non): ")
 
-        # Crée un objet haché de type SHAKE-256 à partir du dictionaire précédemment créé
-        hash_message_dict = hashlib.shake_256(message_dict)
-        # Envoie un objet de type bytes au serveur
-        server_conn.send(hash_message_dict.hexdigest(60).encode("utf-8"))
-        print(hash_message_dict.hexdigest(60) + " =>> envoyé au serveur")
-
+        input_value = 0
+        while input_value == 0 and user_command != "exit":        
+            if user_command.lower() == "Oui".lower() or user_command.lower() == "O".lower():
+                # Génère la clé de chiffrement
+                key = Fernet.generate_key()
+                f = Fernet(key)
+                # Chiffre le message
+                token = f.encrypt(message_dict)
+                print("Le message a été chiffré")
+                # Envoie le message chiffré au serveur
+                server_conn.send(token)
+                print(token.decode()+" =>> envoyé au serveur")
+                input_value = 1
+            elif user_command.lower() == "Non".lower() or user_command.lower() == "N".lower():
+                # Envoie le message en clair au serveur
+                server_conn.send(message_dict)
+                print(message_dict.decode()+" =>> envoyé au serveur")
+                input_value = 1
+            else:
+                user_command = input(login+" Réponse incorrect: Voulez-vous chiffrer le message avant de l'envoyer ?(Oui, Non): ")
+        
     elif action_number == 1:
         login = ""
         print("logout")
