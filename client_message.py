@@ -72,7 +72,7 @@ while user_command != "exit":
         message_dict = {"author": login, "message": message, "message_title": message_title, "recipient": recipient}
         message_dict = str(message_dict)
 
-        # Enregistre le dictionaire dans un document texte
+        # Enregistre le dictionaire dans le document client_message_list
         folder = open("client_message_list.txt", "a")
         folder.write("\n"+message_dict)
         folder.close
