@@ -1,26 +1,3 @@
-# number = input("Choisissez une proposition: ")
-# number = int(number)
-
-# if number == 0:
-#     print("Première proposition")
-# elif number == 1:
-#     print("Seconde proposition")
-# elif number == 2:
-#     print("Troisième proposition")
-# else:
-#     print("Aucune proposition")
-
-# message = input("Tapez votre message: ")
-# message_title = input("Tapez le titre de votre message: ")
-# message_dict = {message_title: message}
-# print(message_dict)
-
-# # Crée un objet haché de type SHAKE-256 à partir du dictionaire précédemment créé
-# hash_message_dict = hashlib.shake_256(message_dict)
-# # Envoie un objet de type bytes au serveur
-# server_conn.send(hash_message_dict.hexdigest(60).encode("utf-8"))
-# print(hash_message_dict.hexdigest(60)+" =>> envoyé au serveur")
-
 import socket, hashlib
 from cryptography.fernet import Fernet
 
@@ -73,9 +50,9 @@ while user_command != "exit":
         message_dict = str(message_dict)
 
         # Enregistre le dictionaire dans le document client_message_list
-        folder = open("client_message_list.txt", "a")
-        folder.write("\n"+message_dict)
-        folder.close
+        message_file = open("client_message_list.txt", "a")
+        message_file.write("\n"+message_dict)
+        message_file.close
         print("message enregistré")
 
         # Teste si le serveur est déconnecté
@@ -90,14 +67,29 @@ while user_command != "exit":
         input_value = 0
         while input_value == 0 and user_command != "exit":        
             if user_command.lower() == "Oui".lower() or user_command.lower() == "O".lower():
-                # Génère la clé de chiffrement
-                key = Fernet.generate_key()
-                f = Fernet(key)
+
+                try:
+                    key_file = open("key.txt", "r")
+                    key_file_content = key_file.read()
+                    key_file.close()
+                except FileNotFoundError:
+                    key_file = open("key.txt", "a+b")
+
+                    # Génère la clé de chiffrement
+                    key = Fernet.generate_key()
+
+                    key_file.write(key)
+                    key_file.seek(0)
+                    key_file_content = key_file.read()
+                    key_file.close()
+                
+                fernet = Fernet(key_file_content)
                 # Chiffre le message
-                token = f.encrypt(message_dict)
+                token = fernet.encrypt(message_dict)
                 print("Le message a été chiffré")
-                # Envoie le message chiffré au serveur
-                server_conn.send(token)
+
+                # Envoie le message au serveur et préfixe le message pour indiquer qu'il est chiffré
+                server_conn.send("encrypt".encode()+token)
                 print(token.decode()+" =>> envoyé au serveur")
                 input_value = 1
             elif user_command.lower() == "Non".lower() or user_command.lower() == "N".lower():

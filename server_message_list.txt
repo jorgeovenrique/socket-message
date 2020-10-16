@@ -1,17 +1,3 @@
 
-gAAAAABfctnronS0pxLx_GdLTjxeXz8C1RTY1y2MlxnDjzibyt_9ND_RVKuoCez0u7lKCt2x9HcR-9mNcFEUljWh6_Y_Aj0KnlAPAGItdxgCFlz7AaSQqM_8H-kGyoDBkJIHQk36E-S1ndCuCbu_H2aV0wrZ3I2kzgckSGTTqV6WoNDnMX5CU6Iawwef3OW0F8OuUwEEIn95
-stop
-close
-{'author': 'jacques', 'message': 'gd', 'message_title': 'ert', 'recipient': 'ertg'}
-stop
-close
-{'author': 'jacques', 'message': 'sdf', 'message_title': 'sdfg', 'recipient': 'sqdf777'}
-stop
-{'author': 'jorge', 'message': 'sdfg', 'message_title': 'sdfg', 'recipient': 'sdfg77788'}
-stop
-{'author': 'jacques', 'message': 'aa', 'message_title': 'aa', 'recipient': 'aaaaaaa'}
-gAAAAABfcut4MsJ0cZKjOujno56aFNOyF8tYmOinAC3KVOW4r3q7R0fdudt6NS5lLvQG6vpgKg1yjNlYKZkBcA0SvesYjHTaBGNstk3w9taw_NKa2o06rELF-khWe1XP0kU9zFdyYh_LStL6cauYsBIriKtUilhKOI5xcc-015qUVPf5kGD1-zJLaaDj23mJgy6CGT_Kfq4o
-{'author': 'jacques', 'message': 'qsdf', 'message_title': 'sdf', 'recipient': 'sdqf999'}
-{'author': 'jacques', 'message': 'qsdf', 'message_title': 'qsdf', 'recipient': 'wwwwwww'}
-{'author': 'jacques', 'message': 'dfg', 'message_title': 'sdfg', 'recipient': 'zzzzz'}
-{'author': 'jorge', 'message': 'sdfg', 'message_title': 'qdfg', 'recipient': 'qsdfg'}
+{'author': 'jorge', 'message': '7', 'message_title': '7', 'recipient': '7'}
+{'author': 'jorge', 'message': '2', 'message_title': '2', 'recipient': '2'}

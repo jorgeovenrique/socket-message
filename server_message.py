@@ -1,4 +1,5 @@
 import socket
+from cryptography.fernet import Fernet
 
 message_recv = ""
 while message_recv != "stop":
@@ -15,17 +16,39 @@ while message_recv != "stop":
     message_recv = ""
     # Limite les itérations à 10 pour éviter une boucle infinie
     i = 0
-    while (message_recv != "close") and (i < 10):
-        if message_recv == "stop":
+    while i < 10:
+        # Permet de sortir de la boucle si la connexion est interrompue coté client
+        if message_recv == "close":
+            break
+        elif message_recv == "stop":
             break
         message_recv = client_conn.recv(1024)
+        
+        # Détecte si le message est chiffré
+        if message_recv.decode()[0:7] == "encrypt":
+            print("Déchiffrement du message reçu...")
+            # Récupère la clé stocké dans key_file.txt
+            key_file = open("key.txt", "r")
+            key_file_content = key_file.read()
+            key_file.close()
+
+            fernet = Fernet(key_file_content)
+            # Soustrait le préfix en commencant au 8ème caractère(l'indice part de 0, soit le caractère "7") c'est à dire après le mot "encrypt"
+            message_recv = message_recv[7:]
+            print(message_recv)
+
+            # Décrypte le message
+            message_recv = fernet.decrypt(message_recv)
+
+        # Converti le message reçu en chaine de caratères    
         message_recv = message_recv.decode()
 
+        # Filtre les messages, si ce sont "close" ou "stop" qui sont envoyés il est inutile de les enregistrer
         if message_recv != "close" and message_recv != "stop":
             # Enregistre le message reçu dans le document server_message_list
-            folder = open("server_message_list.txt", "a")
-            folder.write("\n"+message_recv)
-            folder.close
+            message_file = open("server_message_list.txt", "a")
+            message_file.write("\n"+message_recv)
+            message_file.close
             print("message enregistré")
 
         print(message_recv)
